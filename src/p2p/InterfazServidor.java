@@ -13,4 +13,6 @@ public interface InterfazServidor {
      public void registrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException;
      public void borrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException;
      public boolean login(InterfazCliente cliente,String pass);
+     public void registro(InterfazCliente cliente,String pass);
+     public void deRegister(InterfazCliente cliente);
 }

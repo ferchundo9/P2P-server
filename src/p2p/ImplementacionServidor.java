@@ -29,6 +29,32 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
         this.conexion=conexion;
         this.sentencia=conexion.createStatement();
     }
+    
+    @Override
+    public void deRegister(InterfazCliente cliente)
+    {
+        try {
+            String enviar="DELETE FROM usuarios WHERE nombre=?";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1,cliente.getNombre());
+        } catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    @Override
+    public void registro(InterfazCliente cliente,String pass)
+    {
+        try {
+            String enviar="INSERT INTO usuarios VALUES(?,SHA1(?))";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1,cliente.getNombre());
+            sentenciaSQL.setString(2, pass);
+        } catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
     @Override
     public boolean login(InterfazCliente cliente,String pass)
     {
