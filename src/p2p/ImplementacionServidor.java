@@ -31,32 +31,34 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     }
     
     @Override
-    public void deRegister(InterfazCliente cliente)
+    public void deRegister(InterfazCliente cliente) throws java.rmi.RemoteException
     {
         try {
             String enviar="DELETE FROM usuarios WHERE nombre=?";
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1,cliente.getName());
+            sentenciaSQL.execute();
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
     @Override
-    public void registro(InterfazCliente cliente,String pass)
+    public void registro(InterfazCliente cliente,String pass)  throws java.rmi.RemoteException
     {
         try {
-            String enviar="INSERT INTO usuarios VALUES(?,SHA1(?))";
+            String enviar="INSERT INTO p2p.usuarios VALUES(?,SHA1(?))";
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1,cliente.getName());
             sentenciaSQL.setString(2, pass);
+            sentenciaSQL.execute();
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
         
     }
     
     @Override
-    public boolean login(InterfazCliente cliente,String pass)
+    public boolean login(InterfazCliente cliente,String pass) throws java.rmi.RemoteException
     {
         try {
             String query="SELECT * FROM usuarios";
@@ -77,7 +79,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             return false;
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
         return false;
     }
     
