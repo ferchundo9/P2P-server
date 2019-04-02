@@ -36,7 +36,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
         try {
             String enviar="DELETE FROM usuarios WHERE nombre=?";
             sentenciaSQL=conexion.prepareStatement(enviar);
-            sentenciaSQL.setString(1,cliente.getNombre());
+            sentenciaSQL.setString(1,cliente.getName());
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -47,7 +47,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
         try {
             String enviar="INSERT INTO usuarios VALUES(?,SHA1(?))";
             sentenciaSQL=conexion.prepareStatement(enviar);
-            sentenciaSQL.setString(1,cliente.getNombre());
+            sentenciaSQL.setString(1,cliente.getName());
             sentenciaSQL.setString(2, pass);
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,7 +69,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             cifrada=cifrado.getString("p");
             while(respuesta.next())
             {
-                if(respuesta.getString("nombre").equals(cliente.getNombre()) && respuesta.getString("pass").equals(cifrada))
+                if(respuesta.getString("nombre").equals(cliente.getName()) && respuesta.getString("pass").equals(cifrada))
                 {
                     return true;
                 }

@@ -10,5 +10,9 @@ package p2p;
  * @author Jairo
  */
 public interface InterfazCliente {
-    public String getNombre();
+    public String getName();
+    public void SendMessageToMe(String message);
+    public void ReceiveFriendRequest(InterfazCliente friend);
+    public void AcceptFriendRequest();
+    public void CancelFriendRequest(String user);
 }
