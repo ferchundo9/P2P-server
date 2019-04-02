@@ -39,7 +39,13 @@ public class P2PServer {
       portNum = (br.readLine()).trim();
       int RMIPortNum = Integer.parseInt(portNum);
       startRegistry(RMIPortNum);
-      ImplementacionServidor exportedObj = new ImplementacionServidor();
+      String controlador = "com.mysql.jdbc.Driver";
+      Class.forName(controlador).newInstance();
+      String URL_bd = "jdbc:mysql://127.0.0.1:3306/p2p";
+      String usuario = "jairo";
+      String contraseña = "jairo";
+      conexion = DriverManager.getConnection(URL_bd, usuario, contraseña);
+      ImplementacionServidor exportedObj = new ImplementacionServidor(conexion);
       registryURL = "rmi://localhost:" + portNum + "/aplicacion";
       Naming.rebind(registryURL, exportedObj);
       System.out.println("Servidor preparado.");
@@ -49,13 +55,6 @@ public class P2PServer {
         "Excepcion en servidor: " + re);
     } 
 
-    String controlador = "com.mysql.jdbc.Driver";
-    Class.forName(controlador).newInstance();
-    String URL_bd = "jdbc:mysql://127.0.0.1:3306/p2p";
-    String usuario = "jairo";
-    String contraseña = "jairo";
-    conexion = DriverManager.getConnection(URL_bd, usuario, contraseña);
-    sentenciaSQL = conexion.createStatement();
   }
     
     private static void startRegistry(int RMIPortNum)throws RemoteException

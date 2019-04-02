@@ -10,5 +10,5 @@ package p2p;
  * @author Jairo
  */
 public interface InterfazCliente {
-    
+    public String getNombre();
 }

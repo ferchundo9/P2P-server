@@ -8,22 +8,53 @@ import java.io.IOException;
 import java.rmi.*;
 import java.rmi.server.*;
 import java.util.Vector;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Jairo
  */
 public class ImplementacionServidor  extends UnicastRemoteObject implements InterfazServidor{
     private Vector clientList;
-    public ImplementacionServidor() throws RemoteException
+    private Connection conexion=null;
+    private Statement sentencia=null;
+    private PreparedStatement sentenciaSQL=null;
+    private ResultSet respuesta=null,cifrado=null;
+    private String cifrada;
+    public ImplementacionServidor(Connection conexion) throws RemoteException, SQLException
     {
         super();
         clientList = new Vector();
+        this.conexion=conexion;
+        this.sentencia=conexion.createStatement();
     }
-    public InterfazCliente login(String usuario,String pass)
+    @Override
+    public boolean login(InterfazCliente cliente,String pass)
     {
-        InterfazCliente a = null;
-        return a;
+        try {
+            String query="SELECT * FROM usuarios";
+            respuesta=sentencia.executeQuery(query);
+            String enviar="SELECT SHA1(?) as p";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, pass);
+            cifrado=sentenciaSQL.executeQuery();
+            cifrado.next();
+            cifrada=cifrado.getString("p");
+            while(respuesta.next())
+            {
+                if(respuesta.getString("nombre").equals(cliente.getNombre()) && respuesta.getString("pass").equals(cifrada))
+                {
+                    return true;
+                }
+            }
+            return false;
+        } catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
+    
     @Override
      public synchronized void registrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException{
       if (!(clientList.contains(callbackClientObject))) 

@@ -12,5 +12,5 @@ package p2p;
 public interface InterfazServidor {
      public void registrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException;
      public void borrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException;
-     public InterfazCliente login(String usuario,String pass);
+     public boolean login(InterfazCliente cliente,String pass);
 }
