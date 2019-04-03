@@ -21,15 +21,17 @@ import java.util.logging.Logger;
 public class User extends UnicastRemoteObject implements InterfazUsuario{
     private String name;
     private LinkedList<InterfazUsuario> amigos;
+    private InterfazServidor interfaz;
     public User(String name,LinkedList<InterfazUsuario> amigos) throws RemoteException{
         super();
         this.name=name;
         this.amigos=amigos;
     }
-    public User(String name)throws RemoteException{
+    public User(String name,InterfazServidor i)throws RemoteException{
         super();
         this.name=name;
         this.amigos=new LinkedList<>();
+        this.interfaz=i;
     }
     @Override
     public String getName(){
@@ -57,21 +59,21 @@ public class User extends UnicastRemoteObject implements InterfazUsuario{
         }
 
         if(respuesta.equals("si")){
-            friend.AcceptFriendRequest();
+            friend.AcceptFriendRequest(friend);
             
         }else if(respuesta.equals("no")){
-            friend.CancelFriendRequest(this.name);
+            friend.CancelFriendRequest(friend);
         }
     }
 
     @Override
-    public void AcceptFriendRequest() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void AcceptFriendRequest(InterfazUsuario friend) throws RemoteException {
+        interfaz.nuevaAmistad(name,friend.getName());
     }
 
     @Override
-    public void CancelFriendRequest(String user) {
-        System.out.println("El usuario:"+user+"ha cancelado tu solictud de amistad");
+    public void CancelFriendRequest(InterfazUsuario friend) throws RemoteException {
+        interfaz.desAmistad(name,friend.getName());
     }
     
 }
