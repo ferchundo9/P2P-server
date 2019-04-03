@@ -9,8 +9,10 @@ import java.rmi.*;
 import java.rmi.server.*;
 import java.util.Vector;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -112,5 +114,15 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             return true;
         }
         return false;
+    }
+
+    @Override
+    public ArrayList<String> getList() throws RemoteException {
+        Set<String> keys=clientList.keySet();
+        ArrayList<String> nombres=new ArrayList<>();
+        for(String key:keys){
+            nombres.add(key);
+        }
+        return nombres;
     }
 }
