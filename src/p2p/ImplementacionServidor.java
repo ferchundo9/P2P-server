@@ -26,6 +26,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     private PreparedStatement sentenciaSQL=null;
     private ResultSet respuesta=null,cifrado=null;
     private String cifrada;
+    
     public ImplementacionServidor(Connection conexion) throws RemoteException, SQLException
     {
         super();
@@ -62,7 +63,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     }
     
     @Override
-    public InterfazUsuario login(String cliente,String pass) throws java.rmi.RemoteException
+    public InterfazUsuario login(String cliente,String pass,UserCallBack cb) throws java.rmi.RemoteException
     {
         try {
             String query="SELECT * FROM usuarios";
@@ -77,7 +78,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             {
                 if(respuesta.getString("nombre").equals(cliente) && respuesta.getString("pass").equals(cifrada))
                 {
-                    InterfazUsuario usuario=(InterfazUsuario)new User(cliente,this);
+                    InterfazUsuario usuario=(InterfazUsuario)new User(cliente,this,cb);
                     if (!(clientList.containsKey(usuario.getName()))) 
                     {
                         clientList.put(usuario.getName(),usuario);
@@ -95,22 +96,12 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     
     
 
-  @Override
-  public synchronized void borrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException{
-    /*if (clientList.remove(callbackClientObject)) 
-    {
-      System.out.println("Cliente Eliminado ");
-    } 
-    else 
-    {   
-       System.out.println("Ese cliente no estaba registrado");
-    }*/
-  } 
+  
 
     @Override
     public boolean addFriendRequest(String clientePeticion,String clienteObjetivo) throws RemoteException {
         if(clientList.containsKey(clienteObjetivo) && clientList.containsKey(clientePeticion) ){
-            clientList.get(clienteObjetivo).ReceiveFriendRequest(clientList.get(clientePeticion));
+            clientList.get(clienteObjetivo).getCallBack().ReceiveFriendRequest(clientList.get(clientePeticion));
             return true;
         }
         return false;
