@@ -46,7 +46,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     public void registro(String cliente,String pass)  throws java.rmi.RemoteException
     {
         try {
-            String enviar="INSERT INTO p2p.usuarios VALUES(?,SHA1(?))";
+            String enviar="INSERT INTO usuarios VALUES(?,SHA1(?))";
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1,cliente);
             sentenciaSQL.setString(2, pass);
