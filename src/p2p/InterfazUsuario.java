@@ -4,15 +4,15 @@
  * and open the template in the editor.
  */
 package p2p;
-
+import java.rmi.*;
 /**
  *
  * @author fer
  */
-public interface InterfazUsuario {
-    public String getName();
-    public void SendMessageToMe(String message);
-    public void ReceiveFriendRequest(InterfazUsuario friend);
-    public void AcceptFriendRequest();
-    public void CancelFriendRequest(String user);
+public interface InterfazUsuario extends Remote {
+    public String getName() throws java.rmi.RemoteException;
+    public void SendMessageToMe(String message)throws java.rmi.RemoteException;
+    public void ReceiveFriendRequest(InterfazUsuario friend)throws java.rmi.RemoteException;
+    public void AcceptFriendRequest()throws java.rmi.RemoteException;
+    public void CancelFriendRequest(String user)throws java.rmi.RemoteException;
 }

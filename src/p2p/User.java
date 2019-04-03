@@ -41,7 +41,7 @@ public class User extends UnicastRemoteObject implements InterfazUsuario{
     }
 
     @Override
-    public void ReceiveFriendRequest(InterfazUsuario friend){
+    public void ReceiveFriendRequest(InterfazUsuario friend) throws RemoteException{
         BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("El usuario:"+friend.getName()+ "te ha enviado una solicitud de amistad");
         String respuesta=null;

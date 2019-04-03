@@ -31,24 +31,24 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     }
     
     @Override
-    public void deRegister(InterfazCliente cliente) throws java.rmi.RemoteException
+    public void deRegister(String cliente) throws java.rmi.RemoteException
     {
         try {
             String enviar="DELETE FROM usuarios WHERE nombre=?";
             sentenciaSQL=conexion.prepareStatement(enviar);
-            sentenciaSQL.setString(1,cliente.getName());
+            sentenciaSQL.setString(1,cliente);
             sentenciaSQL.execute();
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     @Override
-    public void registro(InterfazCliente cliente,String pass)  throws java.rmi.RemoteException
+    public void registro(String cliente,String pass)  throws java.rmi.RemoteException
     {
         try {
             String enviar="INSERT INTO p2p.usuarios VALUES(?,SHA1(?))";
             sentenciaSQL=conexion.prepareStatement(enviar);
-            sentenciaSQL.setString(1,cliente.getName());
+            sentenciaSQL.setString(1,cliente);
             sentenciaSQL.setString(2, pass);
             sentenciaSQL.execute();
         } catch (SQLException ex) {
@@ -58,7 +58,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     }
     
     @Override
-    public boolean login(InterfazCliente cliente,String pass) throws java.rmi.RemoteException
+    public InterfazUsuario login(String cliente,String pass) throws java.rmi.RemoteException
     {
         try {
             String query="SELECT * FROM usuarios";
@@ -71,16 +71,17 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             cifrada=cifrado.getString("p");
             while(respuesta.next())
             {
-                if(respuesta.getString("nombre").equals(cliente.getName()) && respuesta.getString("pass").equals(cifrada))
+                if(respuesta.getString("nombre").equals(cliente) && respuesta.getString("pass").equals(cifrada))
                 {
-                    return true;
+                    InterfazUsuario usuario=(InterfazUsuario)new User(cliente);
+                    return usuario;
                 }
             }
-            return false;
+            return null;
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
         } 
-        return false;
+        return null;
     }
     
     @Override
