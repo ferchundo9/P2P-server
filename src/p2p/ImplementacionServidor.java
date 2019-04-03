@@ -77,7 +77,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             {
                 if(respuesta.getString("nombre").equals(cliente) && respuesta.getString("pass").equals(cifrada))
                 {
-                    InterfazUsuario usuario=(InterfazUsuario)new User(cliente);
+                    InterfazUsuario usuario=(InterfazUsuario)new User(cliente,this);
                     if (!(clientList.containsKey(usuario.getName()))) 
                     {
                         clientList.put(usuario.getName(),usuario);
@@ -124,5 +124,38 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             nombres.add(key);
         }
         return nombres;
+    }
+    @Override
+    public void nuevaAmistad(String usuario1,String usuario2)throws RemoteException
+    {
+        String enviar="INSERT INTO amigos(?,?)";
+        try {
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, usuario1);
+            sentenciaSQL.setString(2, usuario2);
+            sentenciaSQL.execute();
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, usuario2);
+            sentenciaSQL.setString(2, usuario1);
+            sentenciaSQL.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void desAmistad(String usuario1,String usuario2)throws RemoteException
+    {
+        String enviar="DELETE FROM amigos WHERE usuario1=? AND usuario2=?";
+        try {
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, usuario1);
+            sentenciaSQL.setString(2, usuario2);
+            sentenciaSQL.execute();
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, usuario2);
+            sentenciaSQL.setString(2, usuario1);
+            sentenciaSQL.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
