@@ -74,6 +74,11 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
                 if(respuesta.getString("nombre").equals(cliente) && respuesta.getString("pass").equals(cifrada))
                 {
                     InterfazUsuario usuario=(InterfazUsuario)new User(cliente);
+                    if (!(clientList.contains(usuario))) 
+                    {
+                        clientList.addElement(usuario);
+                        System.out.println("Nuevo cliente registrado! ");
+                    }
                     return usuario;
                 }
             }
@@ -84,14 +89,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
         return null;
     }
     
-    @Override
-     public synchronized void registrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException{
-      if (!(clientList.contains(callbackClientObject))) 
-      {
-         clientList.addElement(callbackClientObject);
-         System.out.println("Nuevo cliente registrado! ");
-    }
-  }  
+    
 
   @Override
   public synchronized void borrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException{

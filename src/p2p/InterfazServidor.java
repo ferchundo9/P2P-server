@@ -10,7 +10,6 @@ import java.rmi.*;
  * @author Jairo
  */
 public interface InterfazServidor extends Remote {
-     public void registrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException;
      public void borrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException;
      public InterfazUsuario login(String cliente,String pass) throws java.rmi.RemoteException;;
      public void registro(String cliente,String pass) throws java.rmi.RemoteException;;
