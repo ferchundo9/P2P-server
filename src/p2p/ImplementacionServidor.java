@@ -9,6 +9,8 @@ import java.rmi.*;
 import java.rmi.server.*;
 import java.util.Vector;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -16,7 +18,7 @@ import java.util.logging.Logger;
  * @author Jairo
  */
 public class ImplementacionServidor  extends UnicastRemoteObject implements InterfazServidor{
-    private Vector clientList;
+    private HashMap<String,InterfazUsuario> clientList;
     private Connection conexion=null;
     private Statement sentencia=null;
     private PreparedStatement sentenciaSQL=null;
@@ -25,7 +27,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     public ImplementacionServidor(Connection conexion) throws RemoteException, SQLException
     {
         super();
-        clientList = new Vector();
+        clientList = new HashMap<>();
         this.conexion=conexion;
         this.sentencia=conexion.createStatement();
     }
@@ -74,9 +76,9 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
                 if(respuesta.getString("nombre").equals(cliente) && respuesta.getString("pass").equals(cifrada))
                 {
                     InterfazUsuario usuario=(InterfazUsuario)new User(cliente);
-                    if (!(clientList.contains(usuario))) 
+                    if (!(clientList.containsKey(usuario.getName()))) 
                     {
-                        clientList.addElement(usuario);
+                        clientList.put(usuario.getName(),usuario);
                         System.out.println("Nuevo cliente registrado! ");
                     }
                     return usuario;
@@ -93,13 +95,22 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
 
   @Override
   public synchronized void borrarCliente(InterfazCliente callbackClientObject) throws java.rmi.RemoteException{
-    if (clientList.removeElement(callbackClientObject)) 
+    /*if (clientList.remove(callbackClientObject)) 
     {
       System.out.println("Cliente Eliminado ");
     } 
     else 
     {   
        System.out.println("Ese cliente no estaba registrado");
-    }
+    }*/
   } 
+
+    @Override
+    public boolean addFriendRequest(String clientePeticion,String clienteObjetivo) throws RemoteException {
+        if(clientList.containsKey(clienteObjetivo) && clientList.containsKey(clientePeticion) ){
+            clientList.get(clienteObjetivo).ReceiveFriendRequest(clientList.get(clientePeticion));
+            return true;
+        }
+        return false;
+    }
 }
