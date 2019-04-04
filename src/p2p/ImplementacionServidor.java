@@ -101,7 +101,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     @Override
     public boolean addFriendRequest(String clientePeticion,String clienteObjetivo) throws RemoteException {
         if(clientList.containsKey(clienteObjetivo) && clientList.containsKey(clientePeticion) ){
-            clientList.get(clienteObjetivo).getCallBack().ReceiveFriendRequest(clientList.get(clientePeticion));
+            clientList.get(clienteObjetivo).getCallBack().ReceiveFriendRequest(clientList.get(clientePeticion),clientList.get(clienteObjetivo));
             return true;
         }
         return false;

@@ -11,5 +11,5 @@ package p2p;
  */
 public interface UserCallBack {
     public void SendMessageToMe(String message)throws java.rmi.RemoteException;
-    public void ReceiveFriendRequest(InterfazUsuario friend)throws java.rmi.RemoteException;
+    public void ReceiveFriendRequest(InterfazUsuario friend,InterfazUsuario yo)throws java.rmi.RemoteException;
 }
