@@ -78,6 +78,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             {
                 if(respuesta.getString("nombre").equals(cliente) && respuesta.getString("pass").equals(cifrada))
                 {
+                    System.out.println("Funciona");
                     InterfazUsuario usuario=(InterfazUsuario)new User(cliente,this,cb);
                     if (!(clientList.containsKey(usuario.getName()))) 
                     {
@@ -119,17 +120,21 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     @Override
     public void nuevaAmistad(String usuario1,String usuario2)throws RemoteException
     {
-        String enviar="INSERT INTO amigos(?,?)";
+        System.out.println("Estamos dentro");
+        String enviar="INSERT INTO amigos values(?,?)";
         try {
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1, usuario1);
             sentenciaSQL.setString(2, usuario2);
+            System.out.println(sentenciaSQL);
             sentenciaSQL.execute();
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1, usuario2);
             sentenciaSQL.setString(2, usuario1);
+            System.out.println(sentenciaSQL);
             sentenciaSQL.execute();
         } catch (SQLException ex) {
+            System.out.println("Algo pasa");
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

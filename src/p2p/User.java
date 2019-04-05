@@ -56,5 +56,11 @@ public class User extends UnicastRemoteObject implements InterfazUsuario{
     public UserCallBack getCallBack() throws RemoteException {
         return cb;
     }
+
+    @Override
+    public LinkedList<InterfazUsuario> getAmigos() throws RemoteException {
+        return amigos;
+    }
+    
     
 }
