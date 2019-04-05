@@ -172,7 +172,9 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     public void delogin(InterfazUsuario cliente) throws RemoteException {
         Set <String> claves=cliente.getAmigos().keySet();
         for(String key:claves){
-            cliente.getAmigos().get(key).getAmigos().remove(cliente.getName());
+            System.out.println("Entra en "+key);
+            System.out.println("Y elimina a "+cliente.getName());
+            clientList.get(key).getAmigos().remove(cliente.getName());
         }
         clientList.remove(cliente.getName());
         
