@@ -39,7 +39,16 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     public void deRegister(String cliente) throws java.rmi.RemoteException
     {
         try {
-            String enviar="DELETE FROM usuarios WHERE nombre=?";
+            delogin(clientList.get(cliente));
+            String enviar="DELETE FROM amigos WHERE usuario1=?";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1,cliente);
+            sentenciaSQL.execute();
+            enviar="DELETE FROM amigos WHERE usuario2=?";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1,cliente);
+            sentenciaSQL.execute();
+            enviar="DELETE FROM usuarios WHERE nombre=?";
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1,cliente);
             sentenciaSQL.execute();
