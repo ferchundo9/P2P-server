@@ -154,4 +154,14 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public void delogin(InterfazUsuario cliente) throws RemoteException {
+        Set <String> claves=cliente.getAmigos().keySet();
+        for(String key:claves){
+            cliente.getAmigos().get(key).getAmigos().remove(cliente.getName());
+        }
+        clientList.remove(cliente.getName());
+        
+    }
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,10 +21,10 @@ import java.util.logging.Logger;
  */
 public class User extends UnicastRemoteObject implements InterfazUsuario{
     private String name;
-    private LinkedList<InterfazUsuario> amigos;
+    private HashMap<String,InterfazUsuario> amigos;
     private InterfazServidor interfaz;
     private UserCallBack cb;
-    public User(String name,LinkedList<InterfazUsuario> amigos,UserCallBack cb) throws RemoteException{
+    public User(String name,HashMap<String,InterfazUsuario> amigos,UserCallBack cb) throws RemoteException{
         super();
         this.name=name;
         this.amigos=amigos;
@@ -32,7 +33,7 @@ public class User extends UnicastRemoteObject implements InterfazUsuario{
     public User(String name,InterfazServidor i,UserCallBack cb)throws RemoteException{
         super();
         this.name=name;
-        this.amigos=new LinkedList<>();
+        this.amigos=new HashMap<>();
         this.interfaz=i;
         this.cb=cb;
     }
@@ -58,7 +59,7 @@ public class User extends UnicastRemoteObject implements InterfazUsuario{
     }
 
     @Override
-    public LinkedList<InterfazUsuario> getAmigos() throws RemoteException {
+    public HashMap<String,InterfazUsuario> getAmigos() throws RemoteException {
         return amigos;
     }
     
