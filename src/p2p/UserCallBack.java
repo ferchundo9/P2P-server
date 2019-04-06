@@ -13,5 +13,4 @@ import java.rmi.Remote;
  */
 public interface UserCallBack extends Remote{
     public void SendMessageToMe(String message)throws java.rmi.RemoteException;
-    public void ReceiveFriendRequest(InterfazUsuario friend,InterfazUsuario yo)throws java.rmi.RemoteException;
 }
