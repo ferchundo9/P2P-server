@@ -243,6 +243,13 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             sentenciaSQL.setString(1, usuario2);
             sentenciaSQL.setString(2, usuario1);
             sentenciaSQL.execute();
+            
+            if(clientList.get(usuario1)!=null && clientList.get(usuario2)!=null)
+            {
+                clientList.get(usuario1).getAmigos().remove(usuario2);
+                clientList.get(usuario2).getAmigos().remove(usuario1);
+            }
+                
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
