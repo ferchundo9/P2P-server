@@ -120,26 +120,71 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
     }
     
     
-
-  
+    @Override
+    public ArrayList<String> peticionesUsuario(InterfazUsuario u) throws RemoteException 
+    {
+        ArrayList<String> peticiones = new ArrayList<>();
+        try {
+            String enviar="SELECT * FROM peticiones WHERE usuario1=?";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, u.getName());
+            respuesta=sentenciaSQL.executeQuery();
+            while(respuesta.next())
+            {
+                peticiones.add(respuesta.getString("usuario2"));
+            }
+            return peticiones;
+        } catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return peticiones;
+    }
 
     @Override
     public boolean addFriendRequest(String clientePeticion,String clienteObjetivo) throws RemoteException {
-        if(clientList.containsKey(clienteObjetivo) && clientList.containsKey(clientePeticion) ){
-            clientList.get(clienteObjetivo).getCallBack().ReceiveFriendRequest(clientList.get(clientePeticion),clientList.get(clienteObjetivo));
-            return true;
-        }
+            try {
+                String enviar="INSERT INTO peticiones values(?,?)";
+                sentenciaSQL=conexion.prepareStatement(enviar);
+                sentenciaSQL.setString(1,clienteObjetivo);
+                sentenciaSQL.setString(2,clientePeticion);
+                sentenciaSQL.execute(); 
+                return true;
+            } catch (SQLException ex) {
+                Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+            }
         return false;
     }
 
     @Override
-    public ArrayList<String> getList() throws RemoteException {
-        Set<String> keys=clientList.keySet();
-        ArrayList<String> nombres=new ArrayList<>();
-        for(String key:keys){
-            nombres.add(key);
+    public ArrayList<String> getList(InterfazUsuario u) throws RemoteException {
+        ArrayList<String> usuarios = new ArrayList<>();
+        String query="SELECT * FROM usuarios\n" +
+                    "WHERE nombre not in\n" +
+                    "(\n" +
+                    "SELECT usuario1 FROM amigos WHERE usuario2=?\n" +
+                    ")\n" +
+                    "AND nombre not in\n" +
+                    "(\n" +
+                    "	SELECT usuario1 FROM peticiones WHERE usuario2=?\n" +
+                    ")"
+                + "AND nombre not in\n" +
+                    "(\n" +
+                    "	SELECT usuario2 FROM peticiones WHERE usuario1=?\n" +
+                    ")";
+        try {
+            sentenciaSQL=conexion.prepareStatement(query);
+            sentenciaSQL.setString(1,u.getName());
+            sentenciaSQL.setString(2,u.getName());
+            sentenciaSQL.setString(3,u.getName());
+            respuesta=sentenciaSQL.executeQuery();
+            while(respuesta.next())
+            {
+                usuarios.add(respuesta.getString("nombre"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return nombres;
+       return usuarios;
     }
     @Override
     public void nuevaAmistad(String usuario1,String usuario2)throws RemoteException
@@ -149,16 +194,42 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1, usuario1);
             sentenciaSQL.setString(2, usuario2);
-            System.out.println(sentenciaSQL);
             sentenciaSQL.execute();
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1, usuario2);
             sentenciaSQL.setString(2, usuario1);
-            System.out.println(sentenciaSQL);
+            sentenciaSQL.execute();
+            enviar="DELETE FROM peticiones WHERE usuario1=? AND usuario2=?";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, usuario1);
+            sentenciaSQL.setString(2, usuario2);
+            sentenciaSQL.execute();
+            if(clientList.get(usuario1)!=null)
+            {
+                clientList.get(usuario1).getAmigos().put(usuario2,clientList.get(usuario2));   
+            }
+            if(clientList.get(usuario2)!=null)
+            {
+                clientList.get(usuario2).getAmigos().put(usuario1,clientList.get(usuario1));  
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
+    public void rechazoAmistad(String usuario1,String usuario2)throws RemoteException
+    {
+        try {
+            String enviar="DELETE FROM peticiones WHERE usuario1=? AND usuario2=?";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, usuario1);
+            sentenciaSQL.setString(2, usuario2);
             sentenciaSQL.execute();
         } catch (SQLException ex) {
             Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
+    
     }
     public void desAmistad(String usuario1,String usuario2)throws RemoteException
     {

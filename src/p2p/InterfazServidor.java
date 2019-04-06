@@ -16,8 +16,10 @@ public interface InterfazServidor extends Remote {
      public void registro(String cliente,String pass) throws java.rmi.RemoteException;;
      public void deRegister(String cliente) throws java.rmi.RemoteException;;
      public boolean addFriendRequest(String clientePeticion,String clienteObjetivo)throws java.rmi.RemoteException;
-     public ArrayList<String> getList()throws java.rmi.RemoteException;
+     public ArrayList<String> getList(InterfazUsuario u) throws java.rmi.RemoteException;
      public void nuevaAmistad(String usuario1,String usuario2)throws java.rmi.RemoteException;
+     public void rechazoAmistad(String usuario1,String usuario2)throws java.rmi.RemoteException;
      public void desAmistad(String usuario1,String usuario2)throws java.rmi.RemoteException;
      public void delogin(InterfazUsuario cliente)throws java.rmi.RemoteException;
+     public ArrayList<String> peticionesUsuario(InterfazUsuario u) throws java.rmi.RemoteException;
 }

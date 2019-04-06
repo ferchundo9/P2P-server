@@ -62,6 +62,8 @@ public class User extends UnicastRemoteObject implements InterfazUsuario{
     public HashMap<String,InterfazUsuario> getAmigos() throws RemoteException {
         return amigos;
     }
+
+
     
     
 }
