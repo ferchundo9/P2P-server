@@ -15,10 +15,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-/**
- *
- * @author Jairo
- */
+
 public class ImplementacionServidor  extends UnicastRemoteObject implements InterfazServidor{
     private HashMap<String,InterfazUsuario> clientList;
     private Connection conexion=null;
@@ -264,4 +261,34 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
         clientList.remove(cliente.getName());
         
     }
+
+    @Override
+    public boolean cambiarContrasena(InterfazUsuario usuario,String contrasenaActual, String nuevaContrasena) throws RemoteException {
+        try{
+            String query="SELECT * FROM usuarios where nombre=?";
+            sentenciaSQL=conexion.prepareStatement(query);
+            sentenciaSQL.setString(1, usuario.getName());
+            respuesta=sentencia.executeQuery(query);
+            String enviar="SELECT SHA1(?) as p";
+            sentenciaSQL=conexion.prepareStatement(enviar);
+            sentenciaSQL.setString(1, contrasenaActual);
+            cifrado=sentenciaSQL.executeQuery();
+            cifrado.next();
+            cifrada=cifrado.getString("p");
+            respuesta.next();
+            if(!respuesta.getString("pass").equals(cifrada)){
+                return false;
+            }
+            query="UPDATE usuario SET pass=SHA1(?) where nombre=?";
+            sentenciaSQL=conexion.prepareStatement(query);
+            sentenciaSQL.setString(1, nuevaContrasena);
+            sentenciaSQL.setString(2, usuario.getName());
+            sentenciaSQL.executeUpdate();
+            return true;
+        }catch (SQLException ex) {
+            Logger.getLogger(ImplementacionServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
 }

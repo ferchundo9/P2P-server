@@ -22,4 +22,5 @@ public interface InterfazServidor extends Remote {
      public void desAmistad(String usuario1,String usuario2)throws java.rmi.RemoteException;
      public void delogin(InterfazUsuario cliente)throws java.rmi.RemoteException;
      public ArrayList<String> peticionesUsuario(InterfazUsuario u) throws java.rmi.RemoteException;
+     public boolean cambiarContrasena(InterfazUsuario usuario,String contrasenaActual,String nuevaContrasena)throws java.rmi.RemoteException;
 }
