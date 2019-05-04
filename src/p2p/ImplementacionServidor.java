@@ -268,7 +268,7 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             String query="SELECT * FROM usuarios where nombre=?";
             sentenciaSQL=conexion.prepareStatement(query);
             sentenciaSQL.setString(1, usuario.getName());
-            respuesta=sentencia.executeQuery(query);
+            respuesta=sentenciaSQL.executeQuery();
             String enviar="SELECT SHA1(?) as p";
             sentenciaSQL=conexion.prepareStatement(enviar);
             sentenciaSQL.setString(1, contrasenaActual);
@@ -278,8 +278,9 @@ public class ImplementacionServidor  extends UnicastRemoteObject implements Inte
             respuesta.next();
             if(!respuesta.getString("pass").equals(cifrada)){
                 return false;
+                
             }
-            query="UPDATE usuario SET pass=SHA1(?) where nombre=?";
+            query="UPDATE usuarios SET pass=SHA1(?) where nombre=?";
             sentenciaSQL=conexion.prepareStatement(query);
             sentenciaSQL.setString(1, nuevaContrasena);
             sentenciaSQL.setString(2, usuario.getName());

@@ -41,9 +41,9 @@ public class P2PServer {
       startRegistry(RMIPortNum);
       String controlador = "com.mysql.jdbc.Driver";
       Class.forName(controlador).newInstance();
-      String URL_bd = "jdbc:mysql://p2p2019.cts9kyi5zluv.eu-west-3.rds.amazonaws.com:3306/P2P2019";
-      String usuario = "P2P2019";
-      String contraseña = "USCETSE2019";
+      String URL_bd = "jdbc:mysql://127.0.0.1/P2P";
+      String usuario = "root";
+      String contraseña = "root";
       conexion = DriverManager.getConnection(URL_bd, usuario, contraseña);
       ImplementacionServidor exportedObj = new ImplementacionServidor(conexion);
       registryURL = "rmi://localhost:" + portNum + "/aplicacion";

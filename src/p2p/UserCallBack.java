@@ -12,7 +12,7 @@ import java.rmi.Remote;
  * @author fer
  */
 public interface UserCallBack extends Remote{
-    public void SendMessageToMe(String message)throws java.rmi.RemoteException;
-    public void SendImageToMe(byte [] dataInfo,String nombre)throws java.rmi.RemoteException;
-    public void SendPDFTome(byte [] dataInfo,String nombre)throws java.rmi.RemoteException;
+     public void SendMessageToMe(String emisor,String message)throws java.rmi.RemoteException;
+    public void SendImageToMe(String emisor,byte [] dataInfo,String nombre)throws java.rmi.RemoteException;
+    public void SendPDFTome(String emisor,byte [] dataInfo,String nombre)throws java.rmi.RemoteException;
 }
